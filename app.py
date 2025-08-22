@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import numpy as np
 from flask import Flask, request, jsonify, render_template, abort
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import tensorflow as tf
 import google.generativeai as genai
@@ -17,6 +18,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
+
+# Enable CORS for all routes
+CORS(app)
 
 # --- Configuration ---
 # Configure Gemini API
@@ -54,13 +58,17 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Load the pre-trained LSTM model
 # The 'standard_model.h5' file should be in the same directory as app.py
 try:
-    model = tf.keras.models.load_model('standard_model.h5')
+    # Use compile=False to avoid compatibility issues with different TensorFlow versions
+    model = tf.keras.models.load_model('standard_model.h5', compile=False)
+    # Recompile the model with current TensorFlow version
+    model.compile(optimizer='adam', loss='mean_squared_error')
     # A simple check to see if model loaded
     print("LSTM model 'standard_model.h5' loaded successfully.")
-    print(model.summary())
-except (IOError, ImportError) as e:
+    print(f"Model input shape: {model.input_shape}")
+    print(f"Model output shape: {model.output_shape}")
+except (IOError, ImportError, TypeError) as e:
     print(f"Error loading model 'standard_model.h5': {e}")
-    print("Please ensure the model file is present and you have tensorflow installed.")
+    print("Please ensure the model file is present and compatible with current TensorFlow version.")
     model = None
 
 # --- In-Memory Visitor Counter for Admin Dashboard ---
@@ -261,7 +269,8 @@ def chat_with_data():
         return jsonify({"error": "Failed to get answer from AI model."}), 500
 
 if __name__ == '__main__':
+    # Get port from environment variable (Render sets this automatically)
+    port = int(os.environ.get('PORT', 5000))
     # Use host='0.0.0.0' to make it accessible on your network
     # Debug mode should be False in production
-    app.run(host='0.0.0.0', port=5000, debug=False)
-
+    app.run(host='0.0.0.0', port=port, debug=False)
