@@ -1,1 +1,119 @@
-.
+<!-- 
+File: templates/index.html
+Description: Main frontend file for the user-facing application.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroForecast AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="light-mode">
+    <div id="app-container">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="active">
+            <div class="sidebar-header">
+                <h1 class="logo">HydroAI</h1>
+                <button id="sidebar-toggle" class="icon-btn">&equiv;</button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-page="dashboard"><i class="icon-dashboard"></i> <span>Dashboard</span></a>
+                <a href="#" class="nav-link" data-page="report"><i class="icon-report"></i> <span>AI Report</span></a>
+                <a href="#" class="nav-link" data-page="chatbot"><i class="icon-chat"></i> <span>Data Chatbot</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="icon-btn"><i class="icon-moon"></i></button>
+                <button id="download-data-btn" class="icon-btn" disabled><i class="icon-download"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page active">
+                <header class="page-header">
+                    <h2>Data Forecast & Analysis</h2>
+                    <p>Upload your .xlsx file with 'Date' and 'Level' columns to begin.</p>
+                </header>
+                
+                <div id="upload-section">
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="file-input" accept=".xlsx" hidden>
+                        <label for="file-input" id="file-upload-label">
+                            <i class="icon-upload"></i>
+                            <span id="file-name">Click to select your .xlsx file</span>
+                        </label>
+                        <button id="upload-btn">Generate Forecast</button>
+                    </div>
+                </div>
+
+                <div id="loading-indicator" class="hidden">
+                    <div class="spinner"></div>
+                    <p>Processing data and generating forecast... Please wait.</p>
+                </div>
+                
+                <div id="results-section" class="hidden">
+                    <div class="chart-container">
+                        <h3>Water Level Forecast</h3>
+                        <canvas id="forecast-chart"></canvas>
+                    </div>
+                    <div id="analysis-container">
+                        <h3>Hydrogeological AI Analysis</h3>
+                        <div id="analysis-content" class="placeholder">
+                            <p>Your AI-powered data analysis will appear here after the forecast is generated.</p>
+                        </div>
+                         <div id="analysis-loader" class="hidden">
+                            <div class="spinner"></div>
+                            <p>Generating AI analysis...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Report Page -->
+            <section id="report-page" class="page">
+                 <header class="page-header">
+                    <h2>Generate AI Report</h2>
+                    <p>Create a comprehensive, downloadable PDF report of your data analysis.</p>
+                </header>
+                <div id="report-generator">
+                    <div id="report-content-area" class="placeholder">
+                        <p>Generate a forecast on the dashboard to create your report.</p>
+                    </div>
+                    <button id="generate-pdf-btn" disabled>Download Report as PDF</button>
+                </div>
+            </section>
+
+            <!-- Data Chatbot Page -->
+            <section id="chatbot-page" class="page">
+                <header class="page-header">
+                    <h2>Data Chatbot</h2>
+                    <p>Ask questions about your uploaded and forecasted data in natural language.</p>
+                </header>
+                <div id="chatbot-container">
+                    <div id="chat-window">
+                        <div class="chat-message bot">
+                            <p>Hello! Once you've generated a forecast, I can answer questions about your data. For example: "What is the highest forecasted level?"</p>
+                        </div>
+                    </div>
+                    <div id="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Ask a question about your data..." disabled>
+                        <button id="chat-send-btn" disabled>Send</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
