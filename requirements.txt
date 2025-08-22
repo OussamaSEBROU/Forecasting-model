@@ -1,1 +1,8 @@
-
+Flask
+pandas
+openpyxl
+tensorflow
+numpy
+python-dotenv
+gunicorn
+google-generativeai
