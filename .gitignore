@@ -1,1 +1,17 @@
-
+File: .gitignore
+Description: Specifies intentionally untracked files to ignore.
+Python
+pycache/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+Environment
+.env
+Uploads
+uploads/
+IDE
+.idea/
+.vscode/
